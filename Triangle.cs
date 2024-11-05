@@ -6,62 +6,38 @@ using System.Threading.Tasks;
 
 namespace Triangle_vorm
 {
-    enum TriangleSide
-    {
-        A,
-        B,
-        C
-    }
-
     internal class Triangle
     {
         private double a;
         private double b;
         private double c;
         private double h;
+        private double s;
+        private double nurgA;
+        private double nurgB;
+        private double nurgC;
 
-        public Triangle(TriangleSide A, TriangleSide B, TriangleSide C)
+        public Triangle() { }
+
+        public Triangle(double A) 
         {
-            a = (double)A;
-            b = (double)B;
-            c = (double)C;
+            a = A;
+            b = A;
+            c = A;
         }
 
-        public Triangle(TriangleSide A, TriangleSide B, TriangleSide C, double height)
+        public Triangle(double A, double B, double C)
         {
-            a = (double)A;
-            b = (double)B;
-            c = (double)C;
-            h = height;
+            a = A;
+            b = B;
+            c = C;
         }
 
-        public Triangle(TriangleSide side, double height)
-        {
-            switch (side)
-            {
-                case TriangleSide.A:
-                    a = height;
-                    b = 0;
-                    c = 0;
-                    break;
-                case TriangleSide.B:
-                    b = height;
-                    a = 0;
-                    c = 0;
-                    break;
-                case TriangleSide.C:
-                    c = height;
-                    a = 0;
-                    b = 0;
-                    break;
-            }
-            h = height;
-        }
 
 
         public string outputA()
         {
-            return Convert.ToString(a);
+            return Convert.ToString(c);
         }
 
         public string outputB()
@@ -78,17 +54,36 @@ namespace Triangle_vorm
         {
             return Convert.ToString(h);
         }
+        public string outputS()
+        {
+            return Convert.ToString(s);
+        }
+
+        public string outputNurgA() 
+        {
+            return nurgA.ToString("F2"); ;
+        }
+
+        public string outputNurgB()
+        {
+            return nurgB.ToString("F2"); ;
+        }
+
+        public string outputNurgC()
+        {
+            return nurgC.ToString("F2"); ;
+        }
 
         public double HeightFromA()
         {
             double s = Surface();
-            return (2 * s) / a; 
+            return (2 * s) / a;
         }
 
         public double HeightFromB()
         {
             double s = Surface();
-            return (2 * s) / b; 
+            return (2 * s) / b;
         }
 
         public double HeightFromC()
@@ -97,20 +92,67 @@ namespace Triangle_vorm
             return (2 * s) / c;
         }
 
+        public void CalculateNurgCos()
+        {
+            if (ExistTrtiangle)
+            {
+                nurgA = Math.Acos((b * b + c * c - a * a) / (2 * b * c)) * (180 / Math.PI);
+                nurgB = Math.Acos((a * a + c * c - b * b) / (2 * a * c)) * (180 / Math.PI);
+                nurgC = Math.Acos((a * a + b * b - c * c) / (2 * a * b)) * (180 / Math.PI);
+            }
+        }
+
+        public void CalculateNurgSin()
+        {
+            if (ExistTrtiangle)
+            {
+                nurgA = Math.Asin((b * b + c * c - a * a) / (2 * b * c)) * (180 / Math.PI);
+                nurgB = Math.Asin((a * a + c * c - b * b) / (2 * a * c)) * (180 / Math.PI);
+                nurgC = Math.Asin((a * a + b * b - c * c) / (2 * a * b)) * (180 / Math.PI);
+            }
+        }
+
+        public void CalculateNurgTan()
+        {
+            if (ExistTrtiangle)
+            {
+                nurgA = Math.Atan((b * b + c * c - a * a) / (2 * b * c)) * (180 / Math.PI);
+                nurgB = Math.Atan((a * a + c * c - b * b) / (2 * a * c)) * (180 / Math.PI);
+                nurgC = Math.Atan((a * a + b * b - c * c) / (2 * a * b)) * (180 / Math.PI);
+            }
+        }
+
         public double Perimeter()
         {
-            double p = 0;
-            p = a + b + c;
-            return p;
+            if (ExistTrtiangle)
+            {
+                double p = 0;
+                p = a + b + c;
+                return p;
+            }
+            else
+            {
+                double p = 0;
+                return p;
+            }
         }
 
         public double Surface()
         {
-            double s = 0;
-            double p = 0;
-            p = (a + b + c) / 2;
-            s = Math.Sqrt((p * (p - a) * (p - b) * (p - c)));
-            return s;
+            if (ExistTrtiangle)
+            {
+                double s = 0;
+                double p = 0;
+                p = (a + b + c) / 2;
+                s = Math.Sqrt((p * (p - a) * (p - b) * (p - c)));
+                return s;
+            }
+            else 
+            { 
+                double s = 0;
+                return s;
+            }
+            
         }
 
         public double GetSetA
@@ -135,6 +177,29 @@ namespace Triangle_vorm
             get { return h; }
             set { h = value; }
         }
+        public double GetSetS
+        {
+            get { return s; }
+            set { s = value; }
+        }
+
+        public double GetSetNurgA
+        {
+            get { return nurgA; }
+            set { nurgA = value; }
+        }
+
+        public double GetSetNurgB
+        {
+            get { return nurgB; }
+            set { nurgB = value; }
+        }
+
+        public double GetSetNurgC
+        {
+            get { return nurgC; }
+            set { nurgC = value; }
+        }
 
         public bool ExistTrtiangle
         {
@@ -142,7 +207,51 @@ namespace Triangle_vorm
             {
                 if ((a > b + c) && (b > a + c) && (c > a + b))
                     return false;
-                else return true;
+                else 
+                    return true;
+            }
+        }
+
+        public string TriangleType
+        {
+            get
+            {
+                if (ExistTrtiangle)
+                {
+                    string külg = "";
+                    if (a == b && b == c && a == c)
+                    {
+                        külg = "Võrdkülgne";
+                    }
+                    else if (a == b || a == c || b == c)
+                    {
+                        külg = "Võrdhaarane";
+                    }
+                    else
+                    {
+                        külg = "Erikülgne";
+                    }
+
+                    string nurg = "";
+                    if (nurgA < 90 && nurgB < 90 && nurgC < 90)
+                    {
+                        nurg = "Teravnurkne";
+                    }
+                    else if (nurgA == 90 || nurgB == 90 || nurgC == 90)
+                    {
+                        nurg = "Täisnurkne";
+                    }
+                    else
+                    {
+                        nurg = "Nürinurkne";
+                    }
+
+                    return $"{külg} ja {nurg} kolmnurk";
+                }
+                else
+                {
+                    return "Ei ole kolmnurk ";
+                }
             }
         }
     }
