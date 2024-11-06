@@ -8,14 +8,8 @@ namespace Triangle_vorm
 {
     internal class Triangle
     {
-        private double a;
-        private double b;
-        private double c;
-        private double h;
-        private double s;
-        private double nurgA;
-        private double nurgB;
-        private double nurgC;
+        private double a, b, c, h;
+        private double nurkA, nurkB, nurkC;
 
         public Triangle() { }
 
@@ -33,7 +27,16 @@ namespace Triangle_vorm
             c = C;
         }
 
+        public Triangle(double side, double height)
+        {
+            this.h = height;
+            a = side;         
+        }
 
+        public double CalculateSurfaceHeight()
+        {
+            return 0.5 * a * h;
+        }   
 
         public string outputA()
         {
@@ -53,72 +56,38 @@ namespace Triangle_vorm
         public string outputH()
         {
             return Convert.ToString(h);
-        }
-        public string outputS()
-        {
-            return Convert.ToString(s);
-        }
+        }       
 
         public string outputNurgA() 
         {
-            return nurgA.ToString("F2"); ;
+            return nurkA.ToString("F2"); ;
         }
 
         public string outputNurgB()
         {
-            return nurgB.ToString("F2"); ;
+            return nurkB.ToString("F2"); ;
         }
 
         public string outputNurgC()
         {
-            return nurgC.ToString("F2"); ;
+            return nurkC.ToString("F2"); ;
         }
 
-        public double HeightFromA()
-        {
-            double s = Surface();
-            return (2 * s) / a;
-        }
-
-        public double HeightFromB()
-        {
-            double s = Surface();
-            return (2 * s) / b;
-        }
-
-        public double HeightFromC()
-        {
-            double s = Surface();
-            return (2 * s) / c;
-        }
+        // https://stackoverflow.com/questions/45791505/find-angle-from-given-side-of-right-andgle-triangle-and-vise-versa-in-c-sharp
 
         public void CalculateNurgCos()
         {
             if (ExistTrtiangle)
             {
-                nurgA = Math.Acos((b * b + c * c - a * a) / (2 * b * c)) * (180 / Math.PI);
-                nurgB = Math.Acos((a * a + c * c - b * b) / (2 * a * c)) * (180 / Math.PI);
-                nurgC = Math.Acos((a * a + b * b - c * c) / (2 * a * b)) * (180 / Math.PI);
+                nurkA = Math.Acos((b * b + c * c - a * a) / (2 * b * c)) * (180 / Math.PI);
+                nurkB = Math.Acos((a * a + c * c - b * b) / (2 * a * c)) * (180 / Math.PI);
+                nurkC = Math.Acos((a * a + b * b - c * c) / (2 * a * b)) * (180 / Math.PI);
             }
-        }
-
-        public void CalculateNurgSin()
-        {
-            if (ExistTrtiangle)
+            else
             {
-                nurgA = Math.Asin((b * b + c * c - a * a) / (2 * b * c)) * (180 / Math.PI);
-                nurgB = Math.Asin((a * a + c * c - b * b) / (2 * a * c)) * (180 / Math.PI);
-                nurgC = Math.Asin((a * a + b * b - c * c) / (2 * a * b)) * (180 / Math.PI);
-            }
-        }
-
-        public void CalculateNurgTan()
-        {
-            if (ExistTrtiangle)
-            {
-                nurgA = Math.Atan((b * b + c * c - a * a) / (2 * b * c)) * (180 / Math.PI);
-                nurgB = Math.Atan((a * a + c * c - b * b) / (2 * a * c)) * (180 / Math.PI);
-                nurgC = Math.Atan((a * a + b * b - c * c) / (2 * a * b)) * (180 / Math.PI);
+                nurkA = 0;
+                nurkB = 0;
+                nurkC = 0;
             }
         }
 
@@ -126,14 +95,11 @@ namespace Triangle_vorm
         {
             if (ExistTrtiangle)
             {
-                double p = 0;
-                p = a + b + c;
-                return p;
+                return a + b + c;
             }
             else
             {
-                double p = 0;
-                return p;
+                return 0;
             }
         }
 
@@ -141,16 +107,13 @@ namespace Triangle_vorm
         {
             if (ExistTrtiangle)
             {
-                double s = 0;
-                double p = 0;
-                p = (a + b + c) / 2;
-                s = Math.Sqrt((p * (p - a) * (p - b) * (p - c)));
+                double p = (a + b + c) / 2;  
+                double s = Math.Sqrt(p * (p - a) * (p - b) * (p - c));
                 return s;
             }
             else 
             { 
-                double s = 0;
-                return s;
+                return 0;
             }
             
         }
@@ -177,37 +140,32 @@ namespace Triangle_vorm
             get { return h; }
             set { h = value; }
         }
-        public double GetSetS
-        {
-            get { return s; }
-            set { s = value; }
-        }
 
         public double GetSetNurgA
         {
-            get { return nurgA; }
-            set { nurgA = value; }
+            get { return nurkA; }
+            set { nurkA = value; }
         }
 
         public double GetSetNurgB
         {
-            get { return nurgB; }
-            set { nurgB = value; }
+            get { return nurkB; }
+            set { nurkB = value; }
         }
 
         public double GetSetNurgC
         {
-            get { return nurgC; }
-            set { nurgC = value; }
+            get { return nurkC; }
+            set { nurkC = value; }
         }
 
         public bool ExistTrtiangle
         {
-            get 
+            get
             {
                 if ((a > b + c) && (b > a + c) && (c > a + b))
                     return false;
-                else 
+                else
                     return true;
             }
         }
@@ -233,11 +191,11 @@ namespace Triangle_vorm
                     }
 
                     string nurg = "";
-                    if (nurgA < 90 && nurgB < 90 && nurgC < 90)
+                    if (nurkA < 90 && nurkB < 90 && nurkC < 90)
                     {
                         nurg = "Teravnurkne";
                     }
-                    else if (nurgA == 90 || nurgB == 90 || nurgC == 90)
+                    else if (nurkA == 90 || nurkB == 90 || nurkC == 90)
                     {
                         nurg = "Täisnurkne";
                     }
