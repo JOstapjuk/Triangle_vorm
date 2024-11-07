@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Triangle_vorm
 {
@@ -36,12 +37,12 @@ namespace Triangle_vorm
 
             heightLabel = new Label();
             heightLabel.Text = "Kõrgus:";
-            heightLabel.Location = new Point(20, 60); 
+            heightLabel.Location = new Point(20, 60);
             heightLabel.Size = new Size(50, 17);
             Controls.Add(heightLabel);
 
             heightInput = new TextBox();
-            heightInput.Location = new Point(80, 60); 
+            heightInput.Location = new Point(80, 60);
             heightInput.Width = 100;
             Controls.Add(heightInput);
 
@@ -53,8 +54,8 @@ namespace Triangle_vorm
             Controls.Add(calculateBtn);
 
             resultList = new ListView();
-            resultList.Size = new Size(300, 100); 
-            resultList.Location = new Point(20, 150);  
+            resultList.Size = new Size(300, 100);
+            resultList.Location = new Point(20, 150);
             resultList.View = View.Details;
             resultList.Columns.Add("Väli", 150);
             resultList.Columns.Add("Väärtus", 150);
@@ -93,12 +94,62 @@ namespace Triangle_vorm
                 resultList.Items[0].SubItems.Add(side.ToString());
                 resultList.Items[1].SubItems.Add(height.ToString());
                 resultList.Items[2].SubItems.Add(triangle.CalculateSurfaceHeight().ToString());
+
+                if (side > 0 && height > 0)
+                {
+                    SaveTriangleToXml(triangle);
+                }
             }
             else
             {
                 MessageBox.Show("Palun sisestage külg ja kõrgus");
                 return;
             }
+        }
+        //private void SaveTriangleToXml(Triangle triangle)
+        //{
+        //    string filePath = "kolmnurgad.xml";
+
+        //    XmlDocument xmlDoc = new XmlDocument();
+
+        //    xmlDoc.Load(filePath);
+
+        //    XmlElement triangleElement = xmlDoc.CreateElement("Triangle");
+
+        //    triangleElement.SetAttribute("Külg", triangle.GetSetA.ToString());
+        //    triangleElement.SetAttribute("Kõrgus", triangle.GetSetH.ToString());
+        //    triangleElement.SetAttribute("Pindala", triangle.CalculateSurfaceHeight().ToString());
+
+        //    xmlDoc.DocumentElement.AppendChild(triangleElement);
+
+        //    xmlDoc.Save(filePath);
+        //}
+
+        private void SaveTriangleToXml(Triangle triangle)
+        {
+            string filePath = "kolmnurgad.xml";
+
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+
+            XmlWriter writer = XmlWriter.Create(filePath, settings);
+
+            writer.WriteStartDocument();
+            writer.WriteStartElement("Triangles");
+
+            writer.WriteStartElement("Triangle");
+
+            writer.WriteAttributeString("Külg", triangle.GetSetA.ToString());
+            writer.WriteAttributeString("Kõrgus", triangle.GetSetH.ToString());
+            writer.WriteAttributeString("Pindala", triangle.CalculateSurfaceHeight().ToString());
+
+            writer.WriteEndElement();
+            writer.WriteEndElement();
+
+            writer.Flush();
+
+            writer.Close();
+
         }
     }
 }
