@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -106,50 +107,66 @@ namespace Triangle_vorm
                 return;
             }
         }
+        private void SaveTriangleToXml(Triangle triangle)
+        {
+            string filePath = Path.Combine(Application.StartupPath, "kolmnurgad.xml");
+
+            XmlDocument xmlDoc = new XmlDocument();
+
+            if (!File.Exists(filePath))
+            {
+                XmlElement root = xmlDoc.CreateElement("Triangles");
+                xmlDoc.AppendChild(root);
+            }
+            else
+            {
+                try
+                {
+                    xmlDoc.Load(filePath);
+                }
+                catch (XmlException)
+                {
+                    XmlElement root = xmlDoc.CreateElement("Triangles");
+                    xmlDoc.AppendChild(root);
+                }
+            }
+
+            XmlElement triangleElement = xmlDoc.CreateElement("Triangle");
+
+            triangleElement.SetAttribute("Külg", triangle.GetSetA.ToString());
+            triangleElement.SetAttribute("Kõrgus", triangle.GetSetH.ToString());
+            triangleElement.SetAttribute("Pindala", triangle.CalculateSurfaceHeight().ToString());
+
+            xmlDoc.DocumentElement.PrependChild(triangleElement);
+
+            xmlDoc.Save(filePath);     
+        }
+
         //private void SaveTriangleToXml(Triangle triangle)
         //{
         //    string filePath = "kolmnurgad.xml";
 
-        //    XmlDocument xmlDoc = new XmlDocument();
+        //    XmlWriterSettings settings = new XmlWriterSettings();
+        //    settings.Indent = true;
 
-        //    xmlDoc.Load(filePath);
+        //    XmlWriter writer = XmlWriter.Create(filePath, settings);
 
-        //    XmlElement triangleElement = xmlDoc.CreateElement("Triangle");
+        //    writer.WriteStartDocument();
+        //    writer.WriteStartElement("Triangles");
 
-        //    triangleElement.SetAttribute("Külg", triangle.GetSetA.ToString());
-        //    triangleElement.SetAttribute("Kõrgus", triangle.GetSetH.ToString());
-        //    triangleElement.SetAttribute("Pindala", triangle.CalculateSurfaceHeight().ToString());
+        //    writer.WriteStartElement("Triangle");
 
-        //    xmlDoc.DocumentElement.AppendChild(triangleElement);
+        //    writer.WriteAttributeString("Külg", triangle.GetSetA.ToString());
+        //    writer.WriteAttributeString("Kõrgus", triangle.GetSetH.ToString());
+        //    writer.WriteAttributeString("Pindala", triangle.CalculateSurfaceHeight().ToString());
 
-        //    xmlDoc.Save(filePath);
+        //    writer.WriteEndElement();
+        //    writer.WriteEndElement();
+
+        //    writer.Flush();
+
+        //    writer.Close();
+
         //}
-
-        private void SaveTriangleToXml(Triangle triangle)
-        {
-            string filePath = "kolmnurgad.xml";
-
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-
-            XmlWriter writer = XmlWriter.Create(filePath, settings);
-
-            writer.WriteStartDocument();
-            writer.WriteStartElement("Triangles");
-
-            writer.WriteStartElement("Triangle");
-
-            writer.WriteAttributeString("Külg", triangle.GetSetA.ToString());
-            writer.WriteAttributeString("Kõrgus", triangle.GetSetH.ToString());
-            writer.WriteAttributeString("Pindala", triangle.CalculateSurfaceHeight().ToString());
-
-            writer.WriteEndElement();
-            writer.WriteEndElement();
-
-            writer.Flush();
-
-            writer.Close();
-
-        }
     }
 }

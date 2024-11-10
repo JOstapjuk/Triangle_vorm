@@ -8,12 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.IO;
 
 namespace Triangle_vorm
 {
     public partial class Form1 : Form
     {
-        Button startBtn, openSecondFormBtn;
+        Button startBtn;
         ListView listView;
         TextBox textBox1, textBox2, textBox3;
         Label label1,label2,label3;
@@ -168,7 +169,7 @@ namespace Triangle_vorm
                 }
                 else if (triangle.TriangleType.Contains("Võrdhaarane"))
                 {
-                    pictureBox.Image = Image.FromFile(@"Võrdhaarane.jpg");
+                    pictureBox.Image = Image.FromFile(@"Võrdhaarane.png");
                 }
                 else if (triangle.TriangleType.Contains("Erikülgne"))
                 {
@@ -185,62 +186,78 @@ namespace Triangle_vorm
             }
         }
 
-        //private void SaveTriangleToXml(Form1Triangle triangle)
-        //{
-        //    string filePath = "kolmnurgad.xml";
-
-        //    XmlDocument xmlDoc = new XmlDocument();
-
-        //    xmlDoc.Load(filePath);
-
-        //    XmlElement triangleElement = xmlDoc.CreateElement("Triangle");
-
-        //    triangleElement.SetAttribute("KülgA", triangle.GetSetA.ToString());
-        //    triangleElement.SetAttribute("KülgB", triangle.GetSetB.ToString());
-        //    triangleElement.SetAttribute("KülgC", triangle.GetSetC.ToString());
-        //    triangleElement.SetAttribute("Perimeeter", triangle.Perimeter().ToString());
-        //    triangleElement.SetAttribute("Pindala", triangle.Surface().ToString());
-        //    triangleElement.SetAttribute("NurkA", triangle.outputNurgA().ToString());
-        //    triangleElement.SetAttribute("NurkB", triangle.outputNurgB().ToString());
-        //    triangleElement.SetAttribute("NurkC", triangle.outputNurgC().ToString());
-        //    triangleElement.SetAttribute("KolmnurgaTüüp", triangle.TriangleType);
-
-        //    xmlDoc.DocumentElement.AppendChild(triangleElement);
-
-        //    xmlDoc.Save(filePath);
-        //}
-
-        private void SaveTriangleToXml(Form1Triangle triangle)
+        private void SaveTriangleToXml(Triangle triangle)
         {
             string filePath = "kolmnurgad.xml";
 
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
+            XmlDocument xmlDoc = new XmlDocument();
 
-            XmlWriter writer = XmlWriter.Create(filePath, settings);
+            if (!File.Exists(filePath))
+            {
+                XmlElement root = xmlDoc.CreateElement("Triangles");
+                xmlDoc.AppendChild(root);
+            }
+            else
+            {
+                try
+                {
+                    xmlDoc.Load(filePath);
+                }
+                catch (XmlException)
+                {
+                    XmlElement root = xmlDoc.CreateElement("Triangles");
+                    xmlDoc.AppendChild(root);
+                }
+            }
 
-            writer.WriteStartDocument();
-            writer.WriteStartElement("Triangles");
+            XmlElement triangleElement = xmlDoc.CreateElement("Triangle");
 
-            writer.WriteStartElement("Triangle");
+            triangleElement.SetAttribute("KülgA", triangle.GetSetA.ToString());
+            triangleElement.SetAttribute("KülgB", triangle.GetSetB.ToString());
+            triangleElement.SetAttribute("KülgC", triangle.GetSetC.ToString());
+            triangleElement.SetAttribute("Perimeeter", triangle.Perimeter().ToString());
+            triangleElement.SetAttribute("Pindala", triangle.Surface().ToString());
+            triangleElement.SetAttribute("NurkA", triangle.outputNurgA().ToString());
+            triangleElement.SetAttribute("NurkB", triangle.outputNurgB().ToString());
+            triangleElement.SetAttribute("NurkC", triangle.outputNurgC().ToString());
+            triangleElement.SetAttribute("KolmnurgaTüüp", triangle.TriangleType);
 
-            writer.WriteAttributeString("KülgA", triangle.GetSetA.ToString());
-            writer.WriteAttributeString("KülgB", triangle.GetSetB.ToString());
-            writer.WriteAttributeString("KülgC", triangle.GetSetC.ToString());
-            writer.WriteAttributeString("Perimeeter", triangle.Perimeter().ToString());
-            writer.WriteAttributeString("Pindala", triangle.Surface().ToString());
-            writer.WriteAttributeString("NurkA", triangle.outputNurgA().ToString());
-            writer.WriteAttributeString("NurkB", triangle.outputNurgB().ToString());
-            writer.WriteAttributeString("NurkC", triangle.outputNurgC().ToString());
-            writer.WriteAttributeString("KolmnurgaTüüp", triangle.TriangleType);
+            xmlDoc.DocumentElement.PrependChild(triangleElement);
 
-            writer.WriteEndElement();
-            writer.WriteEndElement();
-
-            writer.Flush();
-
-            writer.Close();
-
+            xmlDoc.Save(filePath);
         }
+
+        //private void SaveTriangleToXml(Triangle triangle)
+        //{
+        //    string filePath = "kolmnurgad.xml";
+
+        //    XmlWriterSettings settings = new XmlWriterSettings();
+        //    settings.Indent = true;
+
+        //    XmlWriter writer = XmlWriter.Create(filePath, settings);
+
+        //    writer.WriteStartDocument();
+        //    writer.WriteStartElement("Triangles");
+
+        //    writer.WriteStartElement("Triangle");
+
+        //    writer.WriteAttributeString("KülgA", triangle.GetSetA.ToString());
+        //    writer.WriteAttributeString("KülgB", triangle.GetSetB.ToString());
+        //    writer.WriteAttributeString("KülgC", triangle.GetSetC.ToString());
+        //    writer.WriteAttributeString("Perimeeter", triangle.Perimeter().ToString());
+        //    writer.WriteAttributeString("Pindala", triangle.Surface().ToString());
+        //    writer.WriteAttributeString("NurkA", triangle.outputNurgA().ToString());
+        //    writer.WriteAttributeString("NurkB", triangle.outputNurgB().ToString());
+        //    writer.WriteAttributeString("NurkC", triangle.outputNurgC().ToString());
+        //    writer.WriteAttributeString("KolmnurgaTüüp", triangle.TriangleType);
+
+        //    writer.WriteEndElement();
+        //    writer.WriteEndElement();
+
+        //    writer.Flush();
+
+        //    writer.Close();
+
+        //}
     }
 }
